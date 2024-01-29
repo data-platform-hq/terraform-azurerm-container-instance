@@ -1,4 +1,4 @@
-# Azure <> Terraform module
+# Azure Container Intance Terraform module
 Terraform module for creation Azure <>
 
 ## Usage
