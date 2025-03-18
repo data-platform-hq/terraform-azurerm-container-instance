@@ -69,9 +69,10 @@ variable "exposed_ports_udp" {
 
 variable "image_registry_credential" {
   type = list(object({
-    server   = string
-    username = string
-    password = string
+    server                    = string
+    username                  = string
+    password                  = string
+    user_assigned_identity_id = string
   }))
   description = "List of objects to configure connection to private registry"
   default     = []
