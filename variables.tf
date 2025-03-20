@@ -37,6 +37,12 @@ variable "restart_policy" {
   default     = "Never"
 }
 
+variable "enable_system_assigned_identity" {
+  type        = bool
+  description = "Specifies whether to enable System Assigned identity for container instance or not"
+  default     = false
+}
+
 variable "identity_ids" {
   type        = list(string)
   description = "Specifies a list of User Assigned Managed Identity IDs to be assigned to this Container Group."
@@ -69,9 +75,10 @@ variable "exposed_ports_udp" {
 
 variable "image_registry_credential" {
   type = list(object({
-    server   = string
-    username = string
-    password = string
+    server                    = string
+    username                  = optional(string)
+    password                  = optional(string)
+    user_assigned_identity_id = optional(string)
   }))
   description = "List of objects to configure connection to private registry"
   default     = []

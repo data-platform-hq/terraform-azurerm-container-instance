@@ -9,17 +9,25 @@ resource "azurerm_container_group" "this" {
   subnet_ids          = var.subnet_ids
   tags                = var.tags
 
-  identity {
-    type         = var.identity_ids == null ? "SystemAssigned" : "SystemAssigned, UserAssigned"
-    identity_ids = var.identity_ids
+  dynamic "identity" {
+    for_each = (var.enable_system_assigned_identity || var.identity_ids != null) ? [1] : []
+
+    content {
+      type = join(", ", compact([
+        var.enable_system_assigned_identity ? "SystemAssigned" : "",
+        var.identity_ids != null ? "UserAssigned" : ""
+      ]))
+      identity_ids = var.identity_ids
+    }
   }
 
   dynamic "image_registry_credential" {
     for_each = var.image_registry_credential
     content {
-      server   = image_registry_credential.value.server
-      username = image_registry_credential.value.username
-      password = image_registry_credential.value.password
+      server                    = image_registry_credential.value.server
+      username                  = image_registry_credential.value.username
+      password                  = image_registry_credential.value.password
+      user_assigned_identity_id = image_registry_credential.value.user_assigned_identity_id
     }
   }
 
